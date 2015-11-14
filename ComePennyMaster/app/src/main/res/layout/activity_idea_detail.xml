@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/idea_detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#29c5e4">
+
+            <!--
+            -->
+            <ImageView
+                android:id="@+id/btn_ideaback"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:src="@drawable/booth_back" />
+
+
+            <TextView
+                android:id="@+id/tv_logo_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:text=""
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+        </android.support.v7.widget.Toolbar>
+    </RelativeLayout>
+
+
+    <ListView
+        android:divider="#00000000"
+        android:id="@+id/lv_idea_detail_comments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:paddingTop="4dp"
+        android:scrollbars="none" />
+
+
+</LinearLayout>
