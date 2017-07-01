@@ -37,6 +37,7 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+    int selectedItem;
     int row_cnt = 6;
     int count = 0;
     int offset = 0;
@@ -45,6 +46,10 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<IdeaListItem> arr_list = new ArrayList<>();
     private ListAdapter adapters;
     Toolbar mToolBar;
+    String booth_name;
+    String name[] = {"게임","공부","도전","독서","애니","예술","브랜드","사랑",
+            "스포츠","시간","여행","영화","오글오글","음악","이별","인생","종교","창업",
+            "취업","친구","희망","기타"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +94,13 @@ public class MainActivity extends ActionBarActivity {
          * Add Sound Event Listener
          */
         SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(this);
+
+        /* 효과음
         soundListener.addSoundEvent(PullToRefreshBase.State.PULL_TO_REFRESH, R.raw.pull_event);
         soundListener.addSoundEvent(PullToRefreshBase.State.RESET, R.raw.reset_sound);
         soundListener.addSoundEvent(PullToRefreshBase.State.REFRESHING, R.raw.refreshing_sound);
+         */
+
         mPullRefreshListView.setOnPullEventListener(soundListener);
 
         // Adapter 생성
@@ -106,10 +115,12 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedItem = position - 1;
                 Intent booth_ideas = new Intent(getApplicationContext(), IdeaDetailActivity.class);
-                booth_ideas.putExtra("idea_id", arr_list.get(position-1).getIdea_id());//헤더를 position0으로인식하기때문
+                booth_ideas.putExtra("idea_id", arr_list.get(position - 1).getIdea_id());//헤더를 position0으로인식하기때문
                 booth_ideas.putExtra("email",arr_list.get(position-1).getEmail());
-                startActivity(booth_ideas);
+//                startActivity(booth_ideas);
+                startActivityForResult(booth_ideas,0);
                 overridePendingTransition(0, 0);
             }
 
@@ -124,7 +135,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if ((firstVisibleItem + visibleItemCount) == totalItemCount) {
+                if ((firstVisibleItem + visibleItemCount) > totalItemCount - 2) {
                     //서버로부터 받아온 List개수를 count
                     //지금까지 받아온 개수를 offset
                     if (count != 0) {
@@ -153,6 +164,34 @@ public class MainActivity extends ActionBarActivity {
                 new NetworkGetIdeaRefresh().execute("");
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            // 일반적 상황 (조회수, 좋아요수, 댓글수, 컨텐츠 업데이트)
+            case 1:
+                String backContent = data.getStringExtra("backContent");
+                int backView = data.getIntExtra("backView", 0);
+                int backComment = data.getIntExtra("backComment", 0);
+                int backLike = data.getIntExtra("backLike",0);
+
+                IdeaListItem backItem = arr_list.get(selectedItem);
+                backItem.setContent(backContent);
+                backItem.setViewCount(backView);
+                backItem.setCommentCount(backComment);
+                backItem.setLikeCount(backLike);
+
+                adapters.notifyDataSetChanged();
+                break;
+
+            // 삭제된 상황 (아이템 지우기)
+            case 2:
+                arr_list.remove(selectedItem);
+                adapters.notifyDataSetChanged();
+                break;
+        }
     }
 
     private void initializeToolbar() {
@@ -200,7 +239,6 @@ public class MainActivity extends ActionBarActivity {
                 // jObject에서 데이터를 뽑아내자
                 try {
                     if(offset >0){
-                        Log.e("ttttt","1[" + arr_list.get(0).getIdea_id() +"] 2["+jObjects.getJSONArray("ret").getJSONObject(0).getInt("id")+"]");
                         if(arr_list.get(0).getIdea_id() == jObjects.getJSONArray("ret").getJSONObject(0).getInt("id")){
                             mPullRefreshListView.onRefreshComplete();
                             is_scroll = true;
@@ -218,17 +256,16 @@ public class MainActivity extends ActionBarActivity {
                         int idea_id = obj_boothIdeas.getInt("id");
                         String content = obj_boothIdeas.getString("content");
                         int hit = obj_boothIdeas.getInt("hit");
+                        int comment_num = obj_boothIdeas.getInt("comment_num");
                         int like_num = obj_boothIdeas.getInt("like_num");
                         int booth_id = obj_boothIdeas.getInt("booth_id");
                         String img_url = booth_id+"";
                         String getemail = obj_boothIdeas.getString("email");
 
-
-
-
+                        booth_name = name[booth_id - 1];
 
                         // Item 객체로 만들어야함
-                        IdeaListItem items = new IdeaListItem(img_url, content, getemail, hit, like_num,idea_id);
+                        IdeaListItem items = new IdeaListItem(img_url, content, getemail,booth_name, hit,comment_num, like_num, idea_id);
 
                         // Item 객체를 ArrayList에 넣는다
                         arr_list.add(0,items);
@@ -352,17 +389,16 @@ public class MainActivity extends ActionBarActivity {
                         int idea_id = obj_boothIdeas.getInt("id");
                         String content = obj_boothIdeas.getString("content");
                         int hit = obj_boothIdeas.getInt("hit");
+                        int comment_num = obj_boothIdeas.getInt("comment_num");
                         int like_num = obj_boothIdeas.getInt("like_num");
                         int booth_id = obj_boothIdeas.getInt("booth_id");
                         String img_url = booth_id+"";
                         String getemail = obj_boothIdeas.getString("email");
 
-
-
-
+                        booth_name = name[booth_id - 1];
 
                         // Item 객체로 만들어야함
-                        IdeaListItem items = new IdeaListItem(img_url, content, getemail, hit, like_num,idea_id);
+                        IdeaListItem items = new IdeaListItem(img_url, content, getemail,booth_name, hit,comment_num, like_num, idea_id);
 
                         // Item 객체를 ArrayList에 넣는다
                         arr_list.add(items);

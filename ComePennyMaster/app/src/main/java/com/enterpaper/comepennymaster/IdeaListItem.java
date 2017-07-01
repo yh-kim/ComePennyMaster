@@ -7,19 +7,12 @@ package com.enterpaper.comepennymaster;
 public class IdeaListItem {
     private String img_url;
     private String content;
-    private String Email;
+    private String email;
+    private String booth_name;
     private int ViewCount;
+    private int commentCount;
     private int LikeCount;
     private int idea_id;
-
-    public IdeaListItem(String img_url, String content, String email, int viewCount, int likeCount, int idea_id) {
-        this.img_url = img_url;
-        this.content = content;
-        Email = email;
-        ViewCount = viewCount;
-        LikeCount = likeCount;
-        this.idea_id = idea_id;
-    }
 
     public String getImg_url() {
         return img_url;
@@ -38,11 +31,19 @@ public class IdeaListItem {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
+    }
+
+    public String getBooth_name() {
+        return booth_name;
+    }
+
+    public void setBooth_name(String booth_name) {
+        this.booth_name = booth_name;
     }
 
     public int getViewCount() {
@@ -51,6 +52,14 @@ public class IdeaListItem {
 
     public void setViewCount(int viewCount) {
         ViewCount = viewCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
     public int getLikeCount() {
@@ -66,6 +75,18 @@ public class IdeaListItem {
     }
 
     public void setIdea_id(int idea_id) {
+        this.idea_id = idea_id;
+    }
+
+    public IdeaListItem(String img_url, String content, String email, String booth_name, int viewCount, int commentCount, int likeCount, int idea_id) {
+
+        this.img_url = img_url;
+        this.content = content;
+        this.email = email;
+        this.booth_name = booth_name;
+        ViewCount = viewCount;
+        this.commentCount = commentCount;
+        LikeCount = likeCount;
         this.idea_id = idea_id;
     }
 }

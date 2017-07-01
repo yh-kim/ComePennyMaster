@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IdeaDetailActivity extends ActionBarActivity {
+    int resultCode = 1;
     int row_cnt = 6;
     int count = 0;
     int offset = 0;
@@ -83,19 +84,19 @@ public class IdeaDetailActivity extends ActionBarActivity {
 
         String msg = null;
         if (diffTime < TIME_MAXIMUM.SEC) {
-// sec
+            // sec
             msg = "방금 전";
         } else if ((diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN) {
-// min
+            // min
             msg = diffTime + "분 전";
         } else if ((diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR) {
-// hour
+            // hour
             msg = (diffTime) + "시간 전";
         } else if ((diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY) {
-// day
+            // day
             msg = (diffTime) + "일 전";
         } else if ((diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH) {
-// day
+            // day
             msg = (diffTime) + "달 전";
         } else {
             msg = str;
@@ -241,7 +242,7 @@ public class IdeaDetailActivity extends ActionBarActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailActivity.this);     // 여기서 this는 Activity의 this
 
-// 여기서 부터는 알림창의 속성 설정
+                // 여기서 부터는 알림창의 속성 설정
                 builder.setTitle("글을 수정/삭제 하시겠습니까?")        // 제목 설정
                         .setItems(items, new DialogInterface.OnClickListener() {    // 목록 클릭시 설정
                             public void onClick(DialogInterface dialog1, int index) {
@@ -259,8 +260,6 @@ public class IdeaDetailActivity extends ActionBarActivity {
                                                     // 확인 버튼 클릭시 설정
                                                     public void onClick(DialogInterface dialog, int whichButton) {
                                                         new NetworkIdeaDel().execute();
-                                                        finish();
-
                                                     }
                                                 })
                                                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -313,49 +312,49 @@ public class IdeaDetailActivity extends ActionBarActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 commentDelPosition = position - 1;
 
-                    final CharSequence[] items = {"댓글 수정하기", "댓글 삭제하기"};
+                final CharSequence[] items = {"댓글 수정하기", "댓글 삭제하기"};
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailActivity.this);     // 여기서 this는 Activity의 this
+                AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailActivity.this);     // 여기서 this는 Activity의 this
 
-                    // 여기서 부터는 알림창의 속성 설정
-                    builder.setItems(items, new DialogInterface.OnClickListener() {    // 목록 클릭시 설정
-                                public void onClick(DialogInterface dialog, int index) {
-                                    // int형으로 조건 지정
-                                    switch (index) {
-                                        case 0:
-                                            mDialog = Comment_createDialog();
-                                            break;
-                                        case 1:
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailActivity.this);
-                                            builder.setTitle("삭제 확인")
-                                                    .setMessage("이 글을 삭제하시겠습니까?")        // 메세지 설정
-                                                    .setCancelable(false)        // 뒤로 버튼 클릭시 취소 가능 설정
-                                                    .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
-                                                                // 확인 버튼 클릭시 설정
-                                                                public void onClick(DialogInterface dialog_del, int whichButton) {
-                                                                    new NetworkCommentDel().execute();
-                                                                }
+                // 여기서 부터는 알림창의 속성 설정
+                builder.setItems(items, new DialogInterface.OnClickListener() {    // 목록 클릭시 설정
+                            public void onClick(DialogInterface dialog, int index) {
+                                // int형으로 조건 지정
+                                switch (index) {
+                                    case 0:
+                                        mDialog = Comment_createDialog();
+                                        break;
+                                    case 1:
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailActivity.this);
+                                        builder.setTitle("삭제 확인")
+                                                .setMessage("이 글을 삭제하시겠습니까?")        // 메세지 설정
+                                                .setCancelable(false)        // 뒤로 버튼 클릭시 취소 가능 설정
+                                                .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                                                            // 확인 버튼 클릭시 설정
+                                                            public void onClick(DialogInterface dialog_del, int whichButton) {
+                                                                new NetworkCommentDel().execute();
                                                             }
-                                                    )
-                                                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                                                                // 취소 버튼 클릭시 설정
-                                                                public void onClick(DialogInterface dialog_del, int whichButton) {
-                                                                    dialog_del.cancel();
-                                                                }
+                                                        }
+                                                )
+                                                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                                            // 취소 버튼 클릭시 설정
+                                                            public void onClick(DialogInterface dialog_del, int whichButton) {
+                                                                dialog_del.cancel();
                                                             }
-                                                    );
-                                            AlertDialog dialog_del = builder.create();    // 알림창 객체 생성
-                                            dialog_del.show();    // 알림창 띄우기
-                                            break;
-                                        default:
-                                            dialog.cancel();
-                                            break;
-                                    }
+                                                        }
+                                                );
+                                        AlertDialog dialog_del = builder.create();    // 알림창 객체 생성
+                                        dialog_del.show();    // 알림창 띄우기
+                                        break;
+                                    default:
+                                        dialog.cancel();
+                                        break;
                                 }
                             }
-                    );
-                    AlertDialog dialog = builder.create();    // 알림창 객체 생성
-                    dialog.show();    // 알림창 띄우기
+                        }
+                );
+                AlertDialog dialog = builder.create();    // 알림창 객체 생성
+                dialog.show();    // 알림창 띄우기
                 return false;
             }
         });
@@ -381,11 +380,29 @@ public class IdeaDetailActivity extends ActionBarActivity {
                 }
             }
         });
-
     }
 
     @Override
     public void finish() {
+        if(resultCode == 1){
+            Intent backIntent = new Intent();
+
+            String backContent = tv_ideaoriginal.getText().toString();
+            Integer backView = Integer.valueOf(tv_view.getText().toString().trim());
+            Integer backComment = Integer.valueOf(tv_commentcount.getText().toString().trim());
+            Integer backLike = Integer.valueOf(tv_like.getText().toString().trim());
+
+            backIntent.putExtra("backContent", backContent);
+            backIntent.putExtra("backView", backView);
+            backIntent.putExtra("backComment", backComment);
+            backIntent.putExtra("backLike", backLike);
+
+            setResult(1, backIntent);
+        }
+        else if(resultCode == 2){
+            setResult(resultCode);
+        }
+
         super.finish();
 
         overridePendingTransition(0, 0);
@@ -615,6 +632,14 @@ public class IdeaDetailActivity extends ActionBarActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                return;
+            }
+            // 삭제된 아이디어일 때
+            else if (result == 5) {
+                Toast.makeText(getApplicationContext(), "존재하지 않는 아이디어입니다",
+                        Toast.LENGTH_SHORT).show();
+                resultCode = 2;
+                finish();
                 return;
             }
             // Error 상황
@@ -1015,12 +1040,14 @@ public class IdeaDetailActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Integer result) {
 
-            // 정상적으로 글쓰기
+            // 정상적으로 삭제
             if (result == 0) {
                 try {
                     jObject.getInt("err");
 
-                    IdeaDetailActivity.this.finish();
+                    resultCode = 2;
+                    finish();
+
                     return;
                 } catch (JSONException e) {
                     e.printStackTrace();
